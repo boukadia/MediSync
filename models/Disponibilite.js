@@ -18,7 +18,8 @@ const disponibiliteSchema=mongoose.Schema({
         required:true
     },
     jour:{
-        type:String,
+         type: String, 
+        enum:['lundi','mardi','mercredi','jeudi','vendredi','samedi'],
         required:true
     }
    
