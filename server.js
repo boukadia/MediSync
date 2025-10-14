@@ -12,6 +12,7 @@ app.get("/", (req, res) => {
 // Routes
 app.use('/api/auth', require('./routes/api/authRoutes'));
 app.use('/api/appointment', require('./routes/api/appointmentRoutes'));
+app.use('/api/doctor/disponibilite', require('./routes/api/disponibiliteRoutes'));
 // app.use('/api/users', require('./routes/api/userRoutes'));
 
 // Database connection

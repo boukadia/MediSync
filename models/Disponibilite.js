@@ -1,11 +1,11 @@
 const mongoose=require('mongoose');
 const disponibiliteSchema=mongoose.Schema({
     heureDebut:{
-        type:Date,
+        type:String,
         required:true
     },
     heureFin:{
-        type:Date,
+        type:String,
         required:true
     },
     date:{
