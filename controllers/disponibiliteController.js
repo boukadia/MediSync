@@ -1,5 +1,5 @@
 const Disponibilite=require('../models/Disponibilite')
-const dayjs = require('dayjs');
+// const dayjs = require('dayjs');
 const User=require('../models/User');
 const Creneau = require('../models/Creneau');
 exports.getDisponibilites=async(req,res)=>{
@@ -17,6 +17,8 @@ exports.createDisponibilite=async(req,res)=>{
         // const user=await User.findOne({_id:req.body.medecin});
         // res.json({user:user})
          const disponibilite=  await Disponibilite.create(req.body);
+         const birthday = new Date(req.body.date);
+        console.log('sjkfhdkjfhksjd ',birthday.getHours());
         // const t='112.2'
         const heureDebut=req.body.heureDebut.split(':')
         const heureFin=req.body.heureFin.split(':')
