@@ -13,7 +13,7 @@ const appointmentSchema = new mongoose.Schema({
     required: true,
   },
   creneau: { type: Schema.Types.ObjectId, ref: "Creneau", required: true },
-  date: { type: Date, required: false },
+  date: { type: Date, required: true },
   typeConsultation: {
     type: String,
     enum: ["online", "offline"],

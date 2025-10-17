@@ -18,7 +18,6 @@ exports.createDisponibilite=async(req,res)=>{
         // res.json({user:user})
          const disponibilite=  await Disponibilite.create(req.body);
          const birthday = new Date(req.body.date);
-        console.log('sjkfhdkjfhksjd ',birthday.getHours());
         // const t='112.2'
         const heureDebut=req.body.heureDebut.split(':')
         const heureFin=req.body.heureFin.split(':')

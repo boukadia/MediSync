@@ -14,6 +14,12 @@ exports.register = async (req, res) => {
     const { email, password, role } = req.body;
     const user=await User.create({ email, password, role });
     const token = generateToken(user._id); 
+    // If the user is a patient, create an empty Dossier Medical
+    if(role==="patient"){
+      const DossierMedical = require("../models/DossierMedical");
+      await DossierMedical.create({ patientId: user._id, historiqueConsultations: [] });
+    }
+
     res.status(201).json({ token, user: { id: user._id, email: user.email, role: user.role } });
   } catch (error) {
     res.status(400).json({ error: error.message});
@@ -52,7 +58,6 @@ exports.logOut=async(req,res)=>{
     }
     
     tokenBlacklist.add(token);
-    console.log(`Token blacklisted: ${token.slice(0, 10)}...`);
     
     res.status(200).json({ 
       message: "User logged out successfully",

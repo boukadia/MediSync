@@ -8,6 +8,6 @@ const consultationSchema=new mongoose.Schema({
   diagnostic: String,
   traitement: String,
   notes: String,
-  dateConsultation: { type: Date, default: Date.now }
+  dateConsultation: { type: Date }
 })
 module.exports=mongoose.model('consultation',consultationSchema)
