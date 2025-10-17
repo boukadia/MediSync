@@ -1,17 +1,14 @@
 const mongoose=require('mongoose');
 const disponibiliteSchema=mongoose.Schema({
-    heureDebut:{
-        type:String,
-        required:true
-    },
-    heureFin:{
-        type:String,
-        required:true
-    },
-    date:{
+    dateHeureDebut:{
         type:Date,
         required:true
     },
+    dateHeureFin:{
+        type:Date,
+        required:true
+    },
+   
     medecin:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'User',
