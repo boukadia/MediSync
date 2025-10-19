@@ -6,13 +6,13 @@ const tokenBlacklist = new Set();
 exports.tokenBlacklist = tokenBlacklist;
 
 const generateToken = (userId) => {
-  return jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: '60s' }); 
+  return jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: '600s' }); 
 };
 
 exports.register = async (req, res) => {
   try {
-    const { email, password, role } = req.body;
-    const user=await User.create({ email, password, role });
+    const { email, password, role,name } = req.body;
+    const user=await User.create({ email, password, role ,name});
     const token = generateToken(user._id); 
     // If the user is a patient, create an empty Dossier Medical
     if(role==="patient"){

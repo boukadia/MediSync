@@ -11,11 +11,11 @@ app.get("/", (req, res) => {
 
 // Routes
 app.use('/api/auth', require('./routes/api/authRoutes'));
-app.use('/api/appointment', require('./routes/api/appointmentRoutes'));
-app.use('/api/doctor/disponibilite', require('./routes/api/disponibiliteRoutes'));
-app.use('/api/consultation',require("./routes/api/consultationRoutes"));
+app.use('/api/appointments', require('./routes/api/appointmentRoutes'));
+app.use('/api/disponibilites', require('./routes/api/disponibiliteRoutes'));
+app.use('/api/consultations',require("./routes/api/consultationRoutes"));
 app.use('/api/dossierMedical',require("./routes/api/dossierMedical"));
-// app.use('/api/users', require('./routes/api/userRoutes'));
+app.use('/api/users', require('./routes/api/userRoutes'));
 
 // Database connection
 const connectDB = require('./config/database');

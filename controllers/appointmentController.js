@@ -3,10 +3,100 @@ const User = require("../models/User");
 const Creneau = require("../models/Creneau");
 const Consultation = require("../models/Consultation");
 const Disponibilite = require("../models/Disponibilite");
-exports.formCreateAppointment = async (req, res) => {
-  const doctors = await User.find({ role: "doctor" });
+// Get all appointments
+exports.getAppointments = async (req, res) => {
+  try {
+    const appointments = await Appointment.find()
+      .populate('patientId', 'email')
+      .populate('doctorId', 'email')
+      .populate('creneau');
+    res.json(appointments);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
-  // const patients = await User.find({ role: "patient" });
+// Get appointment by ID
+exports.getAppointmentById = async (req, res) => {
+  try {
+    const appointment = await Appointment.findById(req.params.id)
+      .populate('patientId', 'email')
+      .populate('doctorId', 'email')
+      .populate('creneau');
+    
+    if (!appointment) {
+      return res.status(404).json({ error: 'Appointment not found' });
+    }
+    
+    res.json(appointment);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Get appointment for editing - Libère temporairement le créneau
+exports.getAppointmentForEdit = async (req, res) => {
+  try {
+    const appointment = await Appointment.findById(req.params.id)
+      .populate('patientId', 'email')
+      .populate('doctorId', 'email')
+      .populate('creneau');
+    
+    if (!appointment) {
+      return res.status(404).json({ error: 'Rendez-vous introuvable' });
+    }
+    
+    // Vérifier les permissions
+    if (appointment.patientId.toString() !== req.user._id.toString() && 
+        appointment.doctorId.toString() !== req.user._id.toString() &&
+        req.user.role !== 'admin') {
+      return res.status(403).json({ error: 'Accès refusé' });
+    }
+    
+    // Récupérer l'ID du créneau avant de le libérer
+    const creneauId = appointment.creneau;
+    
+     await Creneau.findOneAndUpdate(
+        { _id: req.body.creneau },
+        { $set: { statut: "libre" } },
+        { new: true, runValidators: true }
+      );
+   
+    
+    // Ajouter une note dans la réponse que le créneau a été libéré temporairement
+    const response = {
+      appointment: appointment,
+      message: 'Créneau temporairement libéré pour permettre la modification',
+      originalCreneauId: creneauId
+    };
+    
+    res.json(response);
+  } catch (error) {
+    console.error('Erreur lors de la récupération du rendez-vous pour modification:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Get user's appointments
+exports.getMyAppointments = async (req, res) => {
+  try {
+    let query = {};
+    
+    if (req.user.role === 'patient') {
+      query.patientId = req.user._id;
+    } else if (req.user.role === 'doctor') {
+      query.doctorId = req.user._id;
+    }
+    
+    const appointments = await Appointment.find(query)
+      .populate('patientId', 'email')
+      .populate('doctorId', 'email')
+      .populate('creneau');
+    
+    res.json(appointments);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
 
 exports.createAppointment = async (req, res) => {
@@ -14,6 +104,7 @@ exports.createAppointment = async (req, res) => {
     const { patientId, doctorId, date, creneau, typeConsultation } = req.body;
     //check role du medecin
     const user = await User.findById(doctorId);
+    
     if (!user && user.role !== "doctor") {
       return res
         .status(400)
@@ -81,5 +172,92 @@ exports.createAppointment = async (req, res) => {
         error.message ||
         "Une erreur est survenue lors de la création du rendez-vous",
     });
+  }
+};
+
+// Update appointment
+exports.updateAppointment = async (req, res) => {
+  try {
+    const { typeConsultation, date,creneau } = req.body;
+    
+    const appointment = await Appointment.findById(req.params.id);
+    if (!appointment) {
+      return res.status(404).json({ error: 'Appointment not found' });
+    }
+    
+    // Only allow updates by patient or doctor involved
+    if (appointment.patientId.toString() !== req.user._id.toString() && 
+        appointment.doctorId.toString() !== req.user._id.toString() &&
+        req.user.role !== 'admin') {
+      return res.status(403).json({ error: 'Access denied' });
+    }
+    
+    const updatedAppointment = await Appointment.findByIdAndUpdate(
+      req.params.id,
+      { typeConsultation, date,creneau },
+      { new: true }
+    ).populate('patientId', 'email').populate('doctorId', 'email');
+    
+     const creneauId = appointment.creneau;
+    
+    await Creneau.findOneAndUpdate(
+        { _id: req.body.creneau },
+        { $set: { statut: "reserve" } },
+        { new: true, runValidators: true }
+      );
+    res.json(updatedAppointment);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Cancel appointment
+exports.cancelAppointment = async (req, res) => {
+  try {
+    const appointment = await Appointment.findById(req.params.id);
+    if (!appointment) {
+      return res.status(404).json({ error: 'Appointment not found' });
+    }
+    
+    // Only allow cancellation by patient or doctor involved
+    if (appointment.patientId.toString() !== req.user._id.toString() && 
+        appointment.doctorId.toString() !== req.user._id.toString() &&
+        req.user.role !== 'admin') {
+      return res.status(403).json({ error: 'Access denied' });
+    }
+    
+    // Free the creneau
+    await Creneau.findByIdAndUpdate(
+      appointment.creneau,
+      { statut: 'libre' }
+    );
+    
+    await Appointment.findByIdAndDelete(req.params.id);
+    
+    res.json({ message: 'Appointment cancelled successfully' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Delete appointment (admin only)
+exports.deleteAppointment = async (req, res) => {
+  try {
+    const appointment = await Appointment.findById(req.params.id);
+    if (!appointment) {
+      return res.status(404).json({ error: 'Appointment not found' });
+    }
+    
+    // Free the creneau
+    await Creneau.findByIdAndUpdate(
+      appointment.creneau,
+      { statut: 'libre' }
+    );
+    
+    await Appointment.findByIdAndDelete(req.params.id);
+    
+    res.json({ message: 'Appointment deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
