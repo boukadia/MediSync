@@ -17,22 +17,22 @@ exports.getAppointments = async (req, res) => {
 };
 
 // Get appointment by ID
-exports.getAppointmentById = async (req, res) => {
-  try {
-    const appointment = await Appointment.findById(req.params.id)
-      .populate('patientId', 'email')
-      .populate('doctorId', 'email')
-      .populate('creneau');
+// exports.getAppointmentById = async (req, res) => {
+//   try {
+//     const appointment = await Appointment.findById(req.params.id)
+//       .populate('patientId', 'email')
+//       .populate('doctorId', 'email')
+//       .populate('creneau');
     
-    if (!appointment) {
-      return res.status(404).json({ error: 'Appointment not found' });
-    }
+//     if (!appointment) {
+//       return res.status(404).json({ error: 'Appointment not found' });
+//     }
     
-    res.json(appointment);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
+//     res.json(appointment);
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// };
 
 // Get appointment for editing - Libère temporairement le créneau
 exports.getAppointmentForEdit = async (req, res) => {
@@ -185,12 +185,12 @@ exports.updateAppointment = async (req, res) => {
       return res.status(404).json({ error: 'Appointment not found' });
     }
     
-    // Only allow updates by patient or doctor involved
-    if (appointment.patientId.toString() !== req.user._id.toString() && 
-        appointment.doctorId.toString() !== req.user._id.toString() &&
-        req.user.role !== 'admin') {
-      return res.status(403).json({ error: 'Access denied' });
-    }
+    // // Only allow updates by patient or doctor involved
+    // if (appointment.patientId.toString() !== req.user._id.toString() && 
+    //     appointment.doctorId.toString() !== req.user._id.toString() &&
+    //     req.user.role !== 'admin') {
+    //   return res.status(403).json({ error: 'Access denied' });
+    // }
     
     const updatedAppointment = await Appointment.findByIdAndUpdate(
       req.params.id,

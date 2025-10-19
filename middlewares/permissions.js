@@ -1,25 +1,25 @@
 const User = require('../models/User');
 
-exports.checkOwnership = (Model, userField = 'userId') => {
-  return async (req, res, next) => {
-    try {
-      const item = await Model.findById(req.params.id);
+// exports.checkOwnership = (Model, userField = 'userId') => {
+//   return async (req, res, next) => {
+//     try {
+//       const item = await Model.findById(req.params.id);
       
-      if (!item) {
-        return res.status(404).json({ error: 'Item not found' });
-      }
+//       if (!item) {
+//         return res.status(404).json({ error: 'Item not found' });
+//       }
       
-      if (item[userField].toString() !== req.user._id.toString() && req.user.role !== 'admin') {
-        return res.status(403).json({ error: 'Access denied - not owner' });
-      }
+//       if (item[userField].toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+//         return res.status(403).json({ error: 'Access denied - not owner' });
+//       }
       
-      req.item = item;
-      next();
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  };
-};
+//       req.item = item;
+//       next();
+//     } catch (error) {
+//       res.status(500).json({ error: error.message });
+//     }
+//   };
+// };
 
 exports.checkDoctorDisponibilite = async (req, res, next) => {
   try {
@@ -48,9 +48,9 @@ exports.checkDoctorDisponibilite = async (req, res, next) => {
   }
 };
 
-exports.checkPatientOwnership = async (req, res, next) => {
+exports.checkPatient = async (req, res, next) => {
   try {
-    if (req.user.role !== 'patient') {
+    if (req.user.role !== 'patient' && req.user.role !== 'admin') {
       return res.status(403).json({ error: 'Only patients can perform this action' });
     }
     
@@ -61,8 +61,11 @@ exports.checkPatientOwnership = async (req, res, next) => {
       if (!appointment) {
         return res.status(404).json({ error: 'Appointment not found' });
       }
+
+
+   
       
-      if (appointment.patient.toString() !== req.user._id.toString()) {
+      if (appointment.patientId.toString() !== req.user._id.toString()&& req.user.role !== 'admin') {
         return res.status(403).json({ error: 'Access denied - not your appointment' });
       }
       

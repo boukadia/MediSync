@@ -15,7 +15,7 @@ router.get('/', getDisponibilites);
 
 router.post('/', authenticate, doctorOnly, createDisponibilite);
 
-router.put('/:id', authenticate, updateDisponibilite
+router.put('/:id', authenticate,checkDoctorDisponibilite ,updateDisponibilite
 );
 
 router.delete('/:id', authenticate, checkDoctorDisponibilite,deleteDisponibilite);
