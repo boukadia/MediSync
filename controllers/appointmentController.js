@@ -34,48 +34,48 @@ exports.getAppointments = async (req, res) => {
 //   }
 // };
 
-// Get appointment for editing - Libère temporairement le créneau
-exports.getAppointmentForEdit = async (req, res) => {
-  try {
-    const appointment = await Appointment.findById(req.params.id)
-      .populate('patientId', 'email')
-      .populate('doctorId', 'email')
-      .populate('creneau');
+// Get appointment for editing - 
+// exports.getAppointmentForEdit = async (req, res) => {
+//   try {
+//     const appointment = await Appointment.findById(req.params.id)
+//       .populate('patientId', 'email')
+//       .populate('doctorId', 'email')
+//       .populate('creneau');
     
-    if (!appointment) {
-      return res.status(404).json({ error: 'Rendez-vous introuvable' });
-    }
+//     if (!appointment) {
+//       return res.status(404).json({ error: 'Rendez-vous introuvable' });
+//     }
     
-    // Vérifier les permissions
-    if (appointment.patientId.toString() !== req.user._id.toString() && 
-        appointment.doctorId.toString() !== req.user._id.toString() &&
-        req.user.role !== 'admin') {
-      return res.status(403).json({ error: 'Accès refusé' });
-    }
+//     // Vérifier les permissions
+//     if (appointment.patientId.toString() !== req.user._id.toString() && 
+//         appointment.doctorId.toString() !== req.user._id.toString() &&
+//         req.user.role !== 'admin') {
+//       return res.status(403).json({ error: 'Accès refusé' });
+//     }
     
-    // Récupérer l'ID du créneau avant de le libérer
-    const creneauId = appointment.creneau;
+//     // Récupérer l'ID du créneau avant de le libérer
+//     const creneauId = appointment.creneau;
     
-     await Creneau.findOneAndUpdate(
-        { _id: req.body.creneau },
-        { $set: { statut: "libre" } },
-        { new: true, runValidators: true }
-      );
+//      await Creneau.findOneAndUpdate(
+//         { _id: req.body.creneau },
+//         { $set: { statut: "libre" } },
+//         { new: true, runValidators: true }
+//       );
    
     
-    // Ajouter une note dans la réponse que le créneau a été libéré temporairement
-    const response = {
-      appointment: appointment,
-      message: 'Créneau temporairement libéré pour permettre la modification',
-      originalCreneauId: creneauId
-    };
+//     // Ajouter une note dans la réponse que le créneau a été libéré temporairement
+//     const response = {
+//       appointment: appointment,
+//       message: 'Créneau temporairement libéré pour permettre la modification',
+//       originalCreneauId: creneauId
+//     };
     
-    res.json(response);
-  } catch (error) {
-    console.error('Erreur lors de la récupération du rendez-vous pour modification:', error);
-    res.status(500).json({ error: error.message });
-  }
-};
+//     res.json(response);
+//   } catch (error) {
+//     console.error('Erreur lors de la récupération du rendez-vous pour modification:', error);
+//     res.status(500).json({ error: error.message });
+//   }
+// };
 
 // Get user's appointments
 exports.getMyAppointments = async (req, res) => {
