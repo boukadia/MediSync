@@ -94,3 +94,13 @@ exports.toggleUserStatus = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+exports.getUserProfile = async (req, res) => {
+  try {
+    res.json(req.user); 
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
