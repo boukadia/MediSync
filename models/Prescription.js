@@ -8,6 +8,10 @@ const schemaPrescription=new mongoose.Schema(
             ref:'Consultation',
             required:true
         },
+        assignedPharmacyId:
+        {
+            type:Schema.Types.ObjectId,ref:'Pharmacy',
+        },
         medications:[
             {
                 name:{type:String,required:true},
