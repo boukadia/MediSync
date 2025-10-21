@@ -1,6 +1,6 @@
 const express = require('express');
 const { authenticate, authorize } = require('../../middlewares/auth');
-const { register, login,getUsers,logOut,toggleUserStatus,deleteUser } = require('../../controllers/AuthController');
+const { register, login,getUsers,logOut,toggleUserStatus,deleteUser,updateProfile } = require('../../controllers/AuthController');
 const { adminOnly } = require('../../middlewares/permissions');
 const router = express.Router();
 
@@ -176,4 +176,6 @@ router.get('/getUsers',
 );
 
 router.put('/status/:id',authenticate,adminOnly,toggleUserStatus);
+router.put('/profile',authenticate,updateProfile)
+router.delete('/profile/delete/:id',authenticate,adminOnly,deleteUser);
 module.exports = router;  
