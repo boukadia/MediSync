@@ -1,6 +1,6 @@
 const express = require('express');
 const { authenticate, authorize } = require('../../middlewares/auth');
-const { register, login,getUsers,logOut } = require('../../controllers/AuthController');
+const { register, login,getUsers,logOut,toggleUserStatus } = require('../../controllers/AuthController');
 const { adminOnly } = require('../../middlewares/permissions');
 const router = express.Router();
 
@@ -174,5 +174,7 @@ router.get('/getUsers',
   adminOnly,
   getUsers
 );
+
+router.put('/status/:id',authenticate,adminOnly,toggleUserStatus);
 
 module.exports = router;

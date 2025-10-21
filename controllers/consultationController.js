@@ -53,7 +53,6 @@ exports.getMyConsultations = async (req, res) => {
         .populate('appointment')
         .sort({ dateConsultation: -1 });
     } else if (req.user.role === 'patient') {
-      // Get appointments for this patient, then find consultations
       const appointments = await Appointment.find({ patientId: req.user._id });
       const appointmentIds = appointments.map(app => app._id);
       

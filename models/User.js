@@ -5,6 +5,7 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   name:{type:String},
   password: { type: String, required: true },
+  status: { type: String, enum: ['active', 'inactive'], default: 'active' },
   refreshToken: String,
   tokenExpiry: Date,
   role: { type: String, enum: ['admin', 'doctor', 'patient'], default: 'patient' }
