@@ -136,7 +136,7 @@ exports.createConsultation = async (req, res) => {
 // Update consultation
 exports.updateConsultation = async (req, res) => {
   try {
-    const { notes, diagnostic, traitement } = req.body;
+    const { notes, diagnostic, traitement,constantes } = req.body;
     
     const consultation = await Consultation.findById(req.params.id);
     if (!consultation) {
@@ -150,7 +150,7 @@ exports.updateConsultation = async (req, res) => {
     
     const updatedConsultation = await Consultation.findByIdAndUpdate(
       req.params.id,
-      { notes, diagnostic, traitement },
+      { notes, diagnostic, traitement ,constantes},
       { new: true }
     ).populate('appointment').populate('medecin', 'email');
     

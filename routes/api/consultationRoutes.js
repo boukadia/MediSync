@@ -323,7 +323,7 @@ router.post('/', authenticate, doctorOnly, createConsultation);
  *       404:
  *         description: Consultation non trouvée
  */
-router.put('/:id', authenticate, updateConsultation);
+router.put('/:id', authenticate,doctorOnly, updateConsultation);
 
 /**
  * @swagger

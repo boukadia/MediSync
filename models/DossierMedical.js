@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const dossierMedicalShema = new mongoose.Schema({
   patientId: { type: Schema.Types.ObjectId, ref: "User", required: true },
- 
+
   historiqueConsultations: [
     {
       consultation: {
@@ -14,7 +14,7 @@ const dossierMedicalShema = new mongoose.Schema({
         type: Date,
         default: Date.now,
       },
-      notes: String, // facultatif, يمكن الطبيب يزيد ملاحظات على الزيارة
+      notes: String, 
     },
   ],
   allergies: { type: String },

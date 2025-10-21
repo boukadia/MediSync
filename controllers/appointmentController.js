@@ -103,9 +103,10 @@ exports.createAppointment = async (req, res) => {
   try {
     const { patientId, doctorId, date, creneau, typeConsultation } = req.body;
     //check role du medecin
-    const user = await User.findById(doctorId);
+    const medecin = await User.findById(doctorId);
+    // const user=req.user; 
     
-    if (!user && user.role !== "doctor") {
+    if (!medecin && medecin.role !== "doctor") {
       return res
         .status(400)
         .json({ error: "Le médecin sélectionné est invalide" });
