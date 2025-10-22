@@ -1,0 +1,22 @@
+const mongoose= require('mongoose');
+const Consultation = require('./Consultation');
+const Schema=mongoose.Schema;
+const schemaLabOrder=new mongoose.Schema({
+    ConsultationId:
+    {
+        type:Schema.Types.ObjectId,
+        ref:"Consultation",
+        require:true
+    },
+    laboratoireId:
+    {
+        type:Schema.Types.ObjectId,
+        ref:"Laboratory",
+        require:true
+    },
+    status:{type:String,enum:['en-attent','completed'],default:'en-attent'},
+    notes: String,//matalan tahlil darori kab dawa2
+    dateOrder:{type:Date,default:Date.now}
+})
+
+module.exports=mongoose.model('LabOrder',schemaLabOrder)

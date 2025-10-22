@@ -5,9 +5,9 @@ const consultationSchema=new mongoose.Schema({
   medecin: { type: Schema.Types.ObjectId, ref: 'User'},
   // patient: { type: Schema.Types.ObjectId, ref: 'User' },
   dossierMedical: { type: Schema.Types.ObjectId, ref: 'DossierMedical'},
-  diagnostic: String,
-  traitement: String,
-  notes: String,
+  diagnostic: String,//tachkhis
+  symptomes: String,//al2a3rad
+  notes: String,//molahadat
   dateConsultation: { type: Date }
 })
 module.exports=mongoose.model('consultation',consultationSchema)

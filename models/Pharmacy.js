@@ -7,6 +7,9 @@ const schemaPharmacy=new mongoose.Schema(
             type:String,
             require:true
         },
+        pharmacistName :{
+            type:String,
+        },
         address:
         {
             type:String,
