@@ -1,4 +1,6 @@
+const Consultation = require('../models/Consultation');
 const User = require('../models/User');
+const Appointment = require('../models/Appointment');
 
 // exports.checkOwnership = (Model, userField = 'userId') => {
 //   return async (req, res, next) => {
@@ -47,6 +49,7 @@ exports.checkDoctorDisponibilite = async (req, res, next) => {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 exports.checkPatient = async (req, res, next) => {
   try {
@@ -109,3 +112,18 @@ exports.patientOnly = (req, res, next) => {
   }
   next();
 };
+exports.checkDoctorConsultation=async(req,res,next)=>{
+  const consultationId=req.body.consultationId;
+  const consultation =await Consultation.findById(consultationId);
+ 
+  const appointment=await Appointment.findById(consultation.appointment);
+  
+  const doctorId=appointment.doctorId;
+if (doctorId.toString()!==req.user._id.toString() ){
+  return res.status(403).json({ error: 'Access denied - not your consultation' });
+  
+}
+next();
+
+
+}

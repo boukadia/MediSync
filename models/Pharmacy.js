@@ -5,7 +5,7 @@ const schemaPharmacy=new mongoose.Schema(
         name:
         {
             type:String,
-            require:true
+            required:true
         },
         pharmacistName :{
             type:String,
@@ -17,15 +17,15 @@ const schemaPharmacy=new mongoose.Schema(
         },
         phone:
         {
-            type:String|null,
-            require:true
+            type:String,
+            required:true
         },
         horaires:
         {
             type:String,
-            require:true
+            required:true
         }
 
     }
 );
-module.exporst=mongoose.module("Pharmacy",schemaPharmacy)
+module.exports=mongoose.model("Pharmacy",schemaPharmacy)

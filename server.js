@@ -16,6 +16,10 @@ app.use('/api/disponibilites', require('./routes/api/disponibiliteRoutes'));
 app.use('/api/consultations',require("./routes/api/consultationRoutes"));
 app.use('/api/dossierMedical',require("./routes/api/dossierMedical"));
 // app.use('/api/users', require('./routes/api/userRoutes'));
+app.use('/api/prescriptions', require('./routes/api/prescriptionRoutes'));
+app.use('/api/pharmacies', require('./routes/api/pharmacyRoutes'));
+app.use('/api/labOrders', require('./routes/api/labOrderRoutes'));
+app.use('/api/laboratoires', require('./routes/api/laboratoirRoutes'));
 
 // Database connection
 const connectDB = require('./config/database');

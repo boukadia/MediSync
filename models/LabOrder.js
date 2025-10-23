@@ -6,14 +6,19 @@ const schemaLabOrder=new mongoose.Schema({
     {
         type:Schema.Types.ObjectId,
         ref:"Consultation",
-        require:true
+        required:true
     },
     laboratoireId:
     {
         type:Schema.Types.ObjectId,
         ref:"Laboratory",
-        require:true
+        required:true
     },
+    tests: [
+    { 
+        name: { type: String, required: true }  
+    }
+  ],
     status:{type:String,enum:['en-attent','completed'],default:'en-attent'},
     notes: String,//matalan tahlil darori kab dawa2
     dateOrder:{type:Date,default:Date.now}

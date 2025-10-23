@@ -11,5 +11,7 @@ const schemaLabOrderTest=new mongoose.Schema({
     valeur_normale_max:Float,
     normalRange:String,
     status:{type:String,enum:['actif','inactif'],default:'inactif'},
-    labOrderId:{type:Schema.types.labOrderId,ref:"LabOrder",require:true},
-})
+    labOrderId:{type:Schema.types.ObjectId,ref:"LabOrder",required:true},
+});
+
+module.exports=mongoose.model('LabOrderTest',schemaLabOrderTest)
