@@ -1,9 +1,22 @@
 const Prescription = require('../models/Prescription');
+const Consultation = require('../models/Consultation');
+const Appointment = require('../models/Appointment');
+const { find } = require('../models/User');
 
-exports.getPrescriptions = async (req, res) => {
+exports.getMyPrescriptions = async (req, res) => {
   try {
-    const prescriptions = await Prescription.find();
-    res.status(200).json(prescriptions);
+   if(req.user.role==='doctor'){
+    
+    const prescriptions=await Prescription.find({doctorId:req.user._id});
+    return res.status(200).json(prescriptions);
+   }
+   if(req.user.role==='patient'){
+
+    const prescriptions=await Prescription.find({patientId:req.user._id});
+    return res.status(200).json(prescriptions);
+   }
+   
+    // const prescriptions = await Prescription.find();
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -11,23 +24,33 @@ exports.getPrescriptions = async (req, res) => {
 
 exports.createPrescription = async (req, res) => {
   try {
-    const { consultationId, medications, notes } = req.body;
+    const docteur=req.user;
+    const consultation=await Consultation.findById(req.body.consultationId);
+    const appointmentId=consultation.appointment;
+    const appointment=await Appointment.findById(appointmentId);
+    
+// const appointment=await Appointment.find
+
+    const { consultationId, medications, notes ,pharmacyId} = req.body;
 
     if (!consultationId) {
       return res.status(400).json({ message: 'Consultation ID is required' });
     }
-    
+
     if (!medications || medications.length === 0) {
       return res.status(400).json({ message: 'At least one medication is required' });
     }
 
     const prescription = await Prescription.create({
+      doctorId:docteur._id,
+      patientId:appointment.patientId,
       ConsultationId: consultationId,
       medications,
-      notes
+      notes,
+      pharmacyId:pharmacyId
     });
 
-    res.status(201).json({ message: 'Prescription created successfully', prescription });
+    res.status(201).json({ message: 'Prescription created successfully', appointment });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

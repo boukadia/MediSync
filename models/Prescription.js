@@ -3,6 +3,18 @@ const Schema=mongoose.Schema;
 
 const schemaPrescription=new mongoose.Schema(
     {
+        patientId:
+        {
+            type:Schema.Types.ObjectId,
+            ref:'User',
+            required:true
+        },
+        doctorId:
+        {
+            type:Schema.Types.ObjectId,
+            ref:'User',
+            required:true
+        },
         ConsultationId:
         {   
             type:Schema.Types.ObjectId,
@@ -17,8 +29,7 @@ const schemaPrescription=new mongoose.Schema(
                 dosage:{type:String,required:true},
                 instructions:{type:String,required:true},//ta3limat ba3d l2akl
                 duration:{type:String,required:true} ,
-                assignedPharmacyId:{type:Schema.Types.ObjectId,ref:'Pharmacy'},
-        
+                pharmacyId:{type:Schema.Types.ObjectId,ref:'Pharmacy',default:null}||null,   
             }
         ],
         status:{type:String,enum:['draft','signed',"sent","dispensed"],default:'draft'}
