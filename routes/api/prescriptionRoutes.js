@@ -14,5 +14,6 @@ router.get('/:id', authenticate,requireRoles('doctor', 'admin'), getPrescription
 router.post('/', authenticate, requireRoles('doctor'),checkDoctorConsultation, createPrescription);
 router.put('/:id', authenticate, requireRoles('doctor'),checkDoctorConsultation, updatePrescription);
 router.delete('/:id', authenticate, requireRoles('doctor'),checkDoctorConsultation, deletePrescription);
+router.put('/prescriptions/:id/dispense', requireRoles(['pharmacy']));
 
 module.exports = router;

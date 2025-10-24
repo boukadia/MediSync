@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
   status: { type: String, enum: ['active', 'inactive'], default: 'active' },
   refreshToken: String,
   tokenExpiry: Date,
-  role: { type: String, enum: ['admin', 'doctor', 'patient'], default: 'patient' }
+  role: { type: String, enum: ['admin', 'doctor', 'patient', 'laboratoire', 'pharmacy'], default: 'patient' }
 });
 
 userSchema.pre('save', async function(next) {

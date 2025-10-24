@@ -110,4 +110,22 @@ exports.deletePrescription = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+exports.markAsDispensed = async (req, res) => {
+  try {
+    const { prescriptionId, medicationId } = req.body;
+
+    const prescription = await Prescription.findById(prescriptionId);
+    if (!prescription) return res.status(404).json({ message: 'Prescription ' });
+
+    const medication = prescription.medications.id(medicationId);
+    if (!medication) return res.status(404).json({ message: 'Medication ' });
+
+    medication.status = 'dispensed';
+
+    await prescription.save();
+    res.status(200).json({ message: 'Medication ', medication });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
 
