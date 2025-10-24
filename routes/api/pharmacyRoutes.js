@@ -11,7 +11,7 @@ const {
 } = require('../../controllers/pharmacyController');
 
 router.get('/', authenticate, getPharmacies);
-router.get('/:id', authenticate, getPharmacyById);
+router.get('/:id', authenticate,adminOnly, getPharmacyById);
 router.post('/', authenticate, adminOnly, createPharmacy);
 router.put('/:id', authenticate, adminOnly, updatePharmacy);
 router.delete('/:id', authenticate, adminOnly, deletePharmacy);

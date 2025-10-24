@@ -79,8 +79,7 @@ exports.updateMedicationPharmacy = async (req, res) => {
 exports.getPrescriptionById = async (req, res) => {
   try {
     const prescription = await Prescription.findById(req.params.id)
-      .populate('consultationId', 'patient doctor')
-      .populate('medications.pharmacy', 'name address phone');
+      
 
     if (!prescription) return res.status(404).json({ message: 'Prescription ' });
 
@@ -111,3 +110,4 @@ exports.deletePrescription = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+

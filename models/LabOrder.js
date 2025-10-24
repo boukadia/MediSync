@@ -2,7 +2,7 @@ const mongoose= require('mongoose');
 const Consultation = require('./Consultation');
 const Schema=mongoose.Schema;
 const schemaLabOrder=new mongoose.Schema({
-    ConsultationId:
+    consultationId:
     {
         type:Schema.Types.ObjectId,
         ref:"Consultation",

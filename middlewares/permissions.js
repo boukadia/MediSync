@@ -127,3 +127,20 @@ next();
 
 
 }
+exports.checkDoctorLabOrder=async(req,res,next)=>{
+   const consultationId=req.body.consultationId;
+   const consultation =await Consultation.findById(consultationId);
+
+ 
+  const appointment=await Appointment.findById(consultation.appointment);
+   console.log(appointment.doctorId.toString());
+   console.log(req.user._id.toString());
+   
+  
+  const doctorId=appointment.doctorId;
+if (doctorId.toString()!==req.user._id.toString()){
+  return res.status(403).json({ error: 'Access denied - not your lab order' });
+
+}
+next();
+}
