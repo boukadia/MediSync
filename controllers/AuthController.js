@@ -6,7 +6,7 @@ const tokenBlacklist = new Set();
 exports.tokenBlacklist = tokenBlacklist;
 
 const generateToken = (userId) => {
-  return jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: '600s' }); 
+  return jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: '6000s' }); 
 };
 
 exports.register = async (req, res) => {

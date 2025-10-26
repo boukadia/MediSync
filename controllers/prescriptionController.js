@@ -66,7 +66,7 @@ exports.updateMedicationPharmacy = async (req, res) => {
     const medication = prescription.medications.id(medicationId);
     if (!medication) return res.status(404).json({ message: 'Medication ' });
 
-    if (pharmacyId) medication.pharmacy = pharmacyId;
+    if (pharmacyId) medication.pharmacyId = pharmacyId;
     if (status) medication.status = status;
 
     await prescription.save();
@@ -112,18 +112,24 @@ exports.deletePrescription = async (req, res) => {
 };
 exports.markAsDispensed = async (req, res) => {
   try {
-    const { prescriptionId, medicationId } = req.body;
+    const { medicationId } = req.body;
+    const prescriptionId = req.params.id;
 
+    // Find the prescription
     const prescription = await Prescription.findById(prescriptionId);
-    if (!prescription) return res.status(404).json({ message: 'Prescription ' });
+    if (!prescription) return res.status(404).json({ message: 'Prescription not found' });
 
+    // Find the medication by its _id in the array (not by index!)
     const medication = prescription.medications.id(medicationId);
-    if (!medication) return res.status(404).json({ message: 'Medication ' });
+    if (!medication) return res.status(404).json({ message: 'Medication not found' });
 
+    // Update only the status field
     medication.status = 'dispensed';
-
+    
+    // Save the prescription
     await prescription.save();
-    res.status(200).json({ message: 'Medication ', medication });
+
+    res.status(200).json({ message: 'Medication marked as dispensed', medication });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

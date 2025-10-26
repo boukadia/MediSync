@@ -2,6 +2,18 @@ const mongoose= require('mongoose');
 const Consultation = require('./Consultation');
 const Schema=mongoose.Schema;
 const schemaLabOrder=new mongoose.Schema({
+    patientId:
+    {
+        type:Schema.Types.ObjectId,
+        ref:"Patient",
+        required:true
+    },
+    doctorId:
+    {
+        type:Schema.Types.ObjectId,
+        ref:"Doctor",
+        required:true
+    },
     consultationId:
     {
         type:Schema.Types.ObjectId,

@@ -1,6 +1,7 @@
 const Consultation = require('../models/Consultation');
 const User = require('../models/User');
 const Appointment = require('../models/Appointment');
+const LabOrder = require('../models/LabOrder');
 
 // exports.checkOwnership = (Model, userField = 'userId') => {
 //   return async (req, res, next) => {
@@ -83,6 +84,7 @@ exports.checkPatient = async (req, res, next) => {
 
 exports.requireRoles = (...roles) => {
   return (req, res, next) => {
+    
     if (!roles.includes(req.user.role)) {
       return res.status(403).json({ 
         error: `Access denied. Required roles: ${roles.join(', ')}` 
@@ -143,4 +145,12 @@ if (doctorId.toString()!==req.user._id.toString()){
 
 }
 next();
+}
+exports.verifyLabOwnership=async(req,res,next)=>{
+  // const labOrderId=req.user._id;
+  const labOrder=await LabOrder.findById(req.params.id);
+  if(labOrder.laboratoireId.toString()!==req.user._id.toString()&& labOrder.doctorId.toString()!==req.user._id.toString()){
+    return res.status(403).json({ error: 'Access denied - not your lab order' });
+  }
+  next();
 }

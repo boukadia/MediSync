@@ -30,9 +30,10 @@ const schemaPrescription=new mongoose.Schema(
                 instructions:{type:String,required:true},//ta3limat ba3d l2akl
                 duration:{type:String,required:true} ,
                 pharmacyId:{type:Schema.Types.ObjectId,ref:'Pharmacy',default:null}||null,   
+                status:{type:String,enum:['prescribed','dispensed'],default:'prescribed'}
             }
         ],
-        status:{type:String,enum:['draft','signed',"sent","dispensed"],default:'draft'}
+        status:{type:String,enum:['draft','signed'],default:'draft'}
     }
 );
 module.exports=mongoose.model('Prescription',schemaPrescription)

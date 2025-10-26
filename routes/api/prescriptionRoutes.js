@@ -7,13 +7,14 @@ const {
   getPrescriptionById,
   createPrescription,
   updatePrescription,
-  deletePrescription
+  deletePrescription,
+  markAsDispensed
 } = require('../../controllers/prescriptionController');
 router.get('/',  authenticate, requireRoles('doctor', 'admin', 'patient'), getMyPrescriptions);
 router.get('/:id', authenticate,requireRoles('doctor', 'admin'), getPrescriptionById);
 router.post('/', authenticate, requireRoles('doctor'),checkDoctorConsultation, createPrescription);
 router.put('/:id', authenticate, requireRoles('doctor'),checkDoctorConsultation, updatePrescription);
 router.delete('/:id', authenticate, requireRoles('doctor'),checkDoctorConsultation, deletePrescription);
-router.put('/prescriptions/:id/dispense', requireRoles(['pharmacy']));
+router.put('/:id/medications', authenticate,requireRoles('pharmacy'),markAsDispensed);
 
 module.exports = router;
