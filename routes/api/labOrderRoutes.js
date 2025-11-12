@@ -11,7 +11,7 @@ const {
   markAsCompleted
 } = require('../../controllers/labOrderController');
 
-router.get('/', authenticate, requireRoles('doctor', 'admin',"laboratoire"), getLabOrders);
+router.get('/', authenticate, requireRoles('doctor', 'admin',"laboratoire","patient"), getLabOrders);
 router.get('/:id', authenticate, getLabOrderById);
 router.post('/', authenticate, requireRoles('doctor'),checkDoctorConsultation, createLabOrder);
 router.put('/:id', authenticate, requireRoles('doctor', 'admin'), verifyLabOwnership,updateLabOrder);

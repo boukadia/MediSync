@@ -20,10 +20,32 @@ exports.getLabOrderTestById = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+exports.getMyLabOrderTests = async (req, res) => {
+  try {
+    let query = {};
+    
+    if (req.user.role === 'doctor') {
+      query.doctorId = req.user._id;
+    } else if (req.user.role === 'laboratoire') {
+      query.laboratoireId = req.user._id;
+    }
+    else if (req.user.role === 'patient') {
+      query.patientId = req.user._id;
+    }
+    
+    const labOrderTests = await LabOrderTest.find(query);
+    
+    res.json(labOrderTests);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 
 exports.createLabOrderTest = async (req, res) => {
   try {
-    const labOrderTest = await LabOrderTest.create(req.body);
+    const userId = req.user._id;
+    const labOrderTest = await LabOrderTest.create({...req.body,laboratoireId:userId});
     res.status(201).json(labOrderTest);
   } catch (error) {
     res.status(400).json({ error: error.message });

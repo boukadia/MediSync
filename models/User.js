@@ -8,8 +8,8 @@ const userSchema = new mongoose.Schema({
   status: { type: String, enum: ['active', 'inactive'], default: 'active' },
   refreshToken: String,
   tokenExpiry: Date,
-  role: { type: String, enum: ['admin', 'doctor', 'patient', 'laboratoire', 'pharmacy'], default: 'patient' }
-});
+  role: { type: String, enum: ['admin', 'doctor', 'patient', 'laboratoire', 'pharmacy','secretaire'], default: 'patient' }
+},{timestamps:true});
 
 userSchema.pre('save', async function(next) {
   if (!this.isModified('password')) return next();

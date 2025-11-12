@@ -1,42 +1,92 @@
-const Joi = require('joi');
+const { body, param, validationResult } = require('express-validator');
 
-const createLaboratorySchema = Joi.object({
-  nom: Joi.string().required(),
-  adresse: Joi.string().required(),
-  telephone: Joi.string().required(),
-  email: Joi.string().email().required(),
-  responsable: Joi.string().required(),
-  openHours: Joi.string().required(),
-  status: Joi.string().valid('actif', 'inactif').default('actif')
-});
-
-const updateLaboratorySchema = Joi.object({
-  nom: Joi.string(),
-  adresse: Joi.string(),
-  telephone: Joi.string(),
-  email: Joi.string().email(),
-  responsable: Joi.string(),
-  openHours: Joi.string(),
-  status: Joi.string().valid('actif', 'inactif')
-});
-
-const validateCreateLaboratory = (req, res, next) => {
-  const { error } = createLaboratorySchema.validate(req.body);
-  if (error) {
-    return res.status(400).json({ error: error.details[0].message });
-  }
-  next();
+// Middleware pour vérifier les erreurs de validation
+const checkValidationErrors = (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+    next();
 };
 
-const validateUpdateLaboratory = (req, res, next) => {
-  const { error } = updateLaboratorySchema.validate(req.body);
-  if (error) {
-    return res.status(400).json({ error: error.details[0].message });
-  }
-  next();
-};
+// Validation pour créer un laboratoire
+exports.validateCreateLaboratory = [
+    body('nom')
+        .notEmpty()
+        .withMessage('Le nom du laboratoire est obligatoire'),
 
-module.exports = {
-  validateCreateLaboratory,
-  validateUpdateLaboratory
-};
+    body('adresse')
+        .notEmpty()
+        .withMessage('L\'adresse est obligatoire'),
+
+    body('telephone')
+        .notEmpty()
+        .withMessage('Le numéro de téléphone est obligatoire')
+        .matches(/^\+?[0-9\s-]{8,}$/)
+        .withMessage('Format de téléphone invalide'),
+
+    body('email')
+        .notEmpty()
+        .withMessage('L\'email est obligatoire')
+        .isEmail()
+        .withMessage('Format d\'email invalide'),
+
+    body('responsable')
+        .notEmpty()
+        .withMessage('Le responsable est obligatoire'),
+
+    body('openHours')
+        .notEmpty()
+        .withMessage('Les heures d\'ouverture sont obligatoires'),
+
+    body('status')
+        .optional()
+        .isIn(['actif', 'inactif'])
+        .withMessage('Status invalide (actif ou inactif seulement)'),
+
+    checkValidationErrors
+];
+
+// Validation pour modifier un laboratoire
+exports.validateUpdateLaboratory = [
+    param('id')
+        .isMongoId()
+        .withMessage('ID de laboratoire invalide'),
+
+    body('nom')
+        .optional()
+        .notEmpty()
+        .withMessage('Le nom ne peut pas être vide'),
+
+    body('adresse')
+        .optional()
+        .notEmpty()
+        .withMessage('L\'adresse ne peut pas être vide'),
+
+    body('telephone')
+        .optional()
+        .matches(/^\+?[0-9\s-]{8,}$/)
+        .withMessage('Format de téléphone invalide'),
+
+    body('email')
+        .optional()
+        .isEmail()
+        .withMessage('Format d\'email invalide'),
+
+    body('responsable')
+        .optional()
+        .notEmpty()
+        .withMessage('Le responsable ne peut pas être vide'),
+
+    body('openHours')
+        .optional()
+        .notEmpty()
+        .withMessage('Les heures d\'ouverture ne peuvent pas être vides'),
+
+    body('status')
+        .optional()
+        .isIn(['actif', 'inactif'])
+        .withMessage('Status invalide (actif ou inactif seulement)'),
+
+    checkValidationErrors
+];

@@ -14,12 +14,16 @@ app.use('/api/auth', require('./routes/api/authRoutes'));
 app.use('/api/appointments', require('./routes/api/appointmentRoutes'));
 app.use('/api/disponibilites', require('./routes/api/disponibiliteRoutes'));
 app.use('/api/consultations',require("./routes/api/consultationRoutes"));
-app.use('/api/dossierMedical',require("./routes/api/dossierMedical"));
+app.use('/api/dossierMedicals',require("./routes/api/dossierMedicalRoutes"));
+
 // app.use('/api/users', require('./routes/api/userRoutes'));
 app.use('/api/prescriptions', require('./routes/api/prescriptionRoutes'));
 app.use('/api/pharmacies', require('./routes/api/pharmacyRoutes'));
 app.use('/api/labOrders', require('./routes/api/labOrderRoutes'));
 app.use('/api/laboratoires', require('./routes/api/laboratoirRoutes'));
+app.use('/api/labOrderTests', require('./routes/api/labOrderTestRoutes'));
+app.use('/api/labResults', require('./routes/api/labResultRoutes'));
+app.use('/api/documents', require('./routes/api/documentRoutes'));
 
 // Database connection
 const connectDB = require('./config/database');

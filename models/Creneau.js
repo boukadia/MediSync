@@ -8,5 +8,5 @@ const creneauSchema=new mongoose.Schema({
     // patient: { type: Schema.Types.ObjectId, ref: 'User' },
     disponibilite:{type:Schema.Types.ObjectId,ref:'Disponibilite',required:true},
     statut:{type:String,enum:['libre','reserve'],default:'libre'}
-})
+},{timestamps:true})
 module.exports=mongoose.model('Creneau',creneauSchema)

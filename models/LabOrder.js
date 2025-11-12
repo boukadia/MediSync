@@ -34,6 +34,6 @@ const schemaLabOrder=new mongoose.Schema({
     status:{type:String,enum:['en-attent','completed'],default:'en-attent'},
     notes: String,//matalan tahlil darori kab dawa2
     dateOrder:{type:Date,default:Date.now}
-})
+},{timestamps:true})
 
 module.exports=mongoose.model('LabOrder',schemaLabOrder)

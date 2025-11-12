@@ -11,13 +11,12 @@ const generateToken = (userId) => {
 
 exports.register = async (req, res) => {
   try {
-    const { email, password,name } = req.body;
-    const user=await User.create({ email, password ,name});
+    const { email, password,name ,role} = req.body;
+    const user=await User.create({ email, password ,name,role});
     const token = generateToken(user._id); 
     // If the user is a patient, create an empty Dossier Medical
     if(user.role==="patient"){
       const DossierMedical = require("../models/DossierMedical");
-      console.log(2);
       
       await DossierMedical.create({ patientId: user._id, historiqueConsultations: [] });
     }

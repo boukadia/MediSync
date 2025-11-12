@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { authenticate } = require('../../middlewares/auth');
 const { adminOnly, doctorOnly, requireRoles } = require('../../middlewares/permissions');
+const { validateCreateConsultation, validateUpdateConsultation } = require('../../validators/consultationValidator');
 const {
   getConsultations,
   getConsultationById,
@@ -276,7 +277,7 @@ router.get('/:id', authenticate, getConsultationById);
  *       403:
  *         description: Accès non autorisé
  */
-router.post('/', authenticate, doctorOnly, createConsultation);
+router.post('/', authenticate, doctorOnly, validateCreateConsultation, createConsultation);
 
 /**
  * @swagger
@@ -323,7 +324,7 @@ router.post('/', authenticate, doctorOnly, createConsultation);
  *       404:
  *         description: Consultation non trouvée
  */
-router.put('/:id', authenticate,doctorOnly, updateConsultation);
+router.put('/:id', authenticate, doctorOnly, validateUpdateConsultation, updateConsultation);
 
 /**
  * @swagger

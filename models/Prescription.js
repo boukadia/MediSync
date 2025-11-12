@@ -34,6 +34,6 @@ const schemaPrescription=new mongoose.Schema(
             }
         ],
         status:{type:String,enum:['draft','signed'],default:'draft'}
-    }
+    },{timestamps:true}
 );
 module.exports=mongoose.model('Prescription',schemaPrescription)

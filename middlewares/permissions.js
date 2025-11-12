@@ -2,27 +2,9 @@ const Consultation = require('../models/Consultation');
 const User = require('../models/User');
 const Appointment = require('../models/Appointment');
 const LabOrder = require('../models/LabOrder');
+const LabOrderTest = require('../models/LabOrderTest');
+const LabResult = require('../models/LabResult');
 
-// exports.checkOwnership = (Model, userField = 'userId') => {
-//   return async (req, res, next) => {
-//     try {
-//       const item = await Model.findById(req.params.id);
-      
-//       if (!item) {
-//         return res.status(404).json({ error: 'Item not found' });
-//       }
-      
-//       if (item[userField].toString() !== req.user._id.toString() && req.user.role !== 'admin') {
-//         return res.status(403).json({ error: 'Access denied - not owner' });
-//       }
-      
-//       req.item = item;
-//       next();
-//     } catch (error) {
-//       res.status(500).json({ error: error.message });
-//     }
-//   };
-// };
 
 exports.checkDoctorDisponibilite = async (req, res, next) => {
   try {
@@ -54,8 +36,8 @@ exports.checkDoctorDisponibilite = async (req, res, next) => {
 
 exports.checkPatient = async (req, res, next) => {
   try {
-    if (req.user.role !== 'patient' && req.user.role !== 'admin') {
-      return res.status(403).json({ error: 'Only patients can perform this action' });
+    if (req.user.role !== 'patient' && req.user.role !== 'admin'&& req.user.role !== 'secretaire') {
+      return res.status(403).json({ error: 'Only patients or secretaire can perform this action' });
     }
     
     if (req.params.id) {
@@ -69,7 +51,7 @@ exports.checkPatient = async (req, res, next) => {
 
    
       
-      if (appointment.patientId.toString() !== req.user._id.toString()&& req.user.role !== 'admin') {
+      if (appointment.patientId.toString() !== req.user._id.toString()&& req.user.role !== 'admin'&&req.user.role !== 'secretaire') {
         return res.status(403).json({ error: 'Access denied - not your appointment' });
       }
       
@@ -149,8 +131,26 @@ next();
 exports.verifyLabOwnership=async(req,res,next)=>{
   // const labOrderId=req.user._id;
   const labOrder=await LabOrder.findById(req.params.id);
-  if(labOrder.laboratoireId.toString()!==req.user._id.toString()&& labOrder.doctorId.toString()!==req.user._id.toString()){
+  if(labOrder.laboratoireId.toString()!==req.user._id.toString()&& labOrder.doctorId.toString()!==req.user._id.toString(),req.user.role==='admin'){
     return res.status(403).json({ error: 'Access denied - not your lab order' });
+  }
+  next();
+}
+exports.verifyLabOrderTestOwnership=async(req, res, next)=>{
+  // const labOrderId=req.user._id;
+  const labOrderTest=await LabOrderTest.findById(req.params.id);
+  const labOrder=await LabOrder.findById(labOrderTest.labOrderId);
+  if(labOrder.laboratoireId.toString()!==req.user._id.toString() && labOrder.doctorId.toString()!==req.user._id.toString()&& req.user.role==='admin'){
+    return res.status(403).json({ error: 'Access denied - not your lab order' });
+  }
+  next();
+}
+exports.verifyLabResultOwnership=async(req, res, next)=>{
+  // const labOrderId=req.user._id;
+  const labResult=await LabResult.findById(req.params.id);
+  const labOrderTest=await LabOrderTest.findById(labResult.labOrderTestId);
+  if(labOrderTest.laboratoireId.toString()!==req.user._id.toString()&& req.user.role==='admin'){
+    return res.status(403).json({ error: 'Access denied - not your lab test' });
   }
   next();
 }

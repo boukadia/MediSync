@@ -1,21 +1,27 @@
 const User = require("../models/User");
 const DossierMedical = require("../models/DossierMedical");
-// Get Dossier Medical by ID
-// exports.getDossierMedical = async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const dossier = await DossierMedical.findById(id)
-//       .populate('historiqueConsultations')
-//       .exec();  
-//     if (!dossier) {
-//       return res.status(404).json({ error: "Dossier médical non trouvé" });
-//     }
-//     res.json(dossier);
-//     } catch (error) {
-//     res.status(500).json({ error: error.message });
+exports.getMyDossierMedical = async (req, res) => {
+  try {
+    const user = req.user;
+    const dossier = await DossierMedical.findOne({ patientId: user._id });
+    if (!dossier) {
+      return res.status(404).json({ error: "Dossier médical non trouvé" });
+    }
+    res.json(dossier);
+    } catch (error) {
+    res.status(500).json({ error: error.message });
 
-//     }
-// };
+    }
+};
+
+exports.getDossierMedicals=async (req,res) => {
+  try {
+    const dossier=await DossierMedical.find();
+    return res.json(dossier);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
 
 // Create a new Dossier Medical
 exports.createDossierMedical = async (req, res) => {
@@ -45,50 +51,34 @@ exports.createDossierMedical = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
-// Update Dossier Medical (e.g., add a consultation)
-// exports.updateDossierMedical = async (req, res) => {
-//   try {      
-//     const { id } = req.params;
-//     const { allergies, groupeSanguin, newConsultationId } = req.body;
-//     const dossier = await DossierMedical.findById(id);
-//     if (!dossier) {
-//       return res.status(404).json({ error: "Dossier médical non trouvé" });
-//     }
-//     // Update fields if provided
-//     if (allergies) dossier.allergies = allergies;
-//     if (groupeSanguin) dossier.groupeSanguin = groupeSanguin;
-//     // Add new consultation to historiqueConsultations if provided
-//     if (newConsultationId) {
-//       dossier.historiqueConsultations.push(newConsultationId);
-//     }
-//     await dossier.save();
-//     res.json(dossier);
-//   } catch (error) {
-//     res.status(400).json({ error: error.message });
-//   }
-// };
-// Delete Dossier Medical
-// exports.deleteDossierMedical = async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const dossier = await DossierMedical.findByIdAndDelete(id);
-//     if (!dossier) {
-//       return res.status(404).json({ error: "Dossier médical non trouvé" });
-//     }
-//     res.json({ message: "Dossier médical supprimé avec succès" });
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// };
-// Note: Additional functions like updating or deleting a Dossier Medical can be added as needed.
-
-// Note: Additional functions like updating or deleting a Dossier Medical can be added as needed.
-// exports.updateDossierMedical = async (req, res) => {};
-
-// exports.deleteDossierMedical = async (req, res) => {};
-// Note: Additional functions like updating or deleting a Dossier Medical can be added as needed.
-// exports.updateDossierMedical = async (req, res) => {};
-// exports.deleteDossierMedical = async (req, res) => {};
-// Note: Additional functions like updating or deleting a Dossier Medical can be added as needed.
-// exports.updateDossierMedical = async (req, res) => {};
-// exports.deleteDossierMedical = async (req, res) => {};
+exports.updateDossierMedical = async (req, res) => {
+  try {      
+    const { id } = req.params;
+    const { allergies, groupeSanguin, newConsultationId } = req.body;
+    const dossier = await DossierMedical.findById(id);
+    if (!dossier) {
+      return res.status(404).json({ error: "Dossier médical non trouvé" });
+    }
+    // Update fields if provided
+    if (allergies) dossier.allergies = allergies;
+    if (groupeSanguin) dossier.groupeSanguin = groupeSanguin;
+    // Add new consultation to historiqueConsultations if provided
+   
+    await dossier.save();
+    res.json(dossier);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+exports.deleteDossierMedical = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const dossier = await DossierMedical.findByIdAndDelete(id);
+    if (!dossier) {
+      return res.status(404).json({ error: "Dossier médical non trouvé" });
+    }
+    res.json({ message: "Dossier médical supprimé avec succès" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};

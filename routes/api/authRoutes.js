@@ -169,11 +169,7 @@ router.get('/logout', logOut);
  *       403:
  *         description: Accès non autorisé
  */
-router.get('/getUsers', 
-  authenticate, 
-  adminOnly,
-  getUsers
-);
+
 
 router.put('/status/:id',authenticate,adminOnly,toggleUserStatus);
 router.put('/profile',authenticate,updateProfile)

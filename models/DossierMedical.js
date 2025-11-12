@@ -17,7 +17,7 @@ const dossierMedicalShema = new mongoose.Schema({
       notes: String, 
     },
   ],
-  allergies: { type: String },
+  allergies: { type: String},
   groupeSanguin: { type: String },
-});
+},{timestamps:true});
 module.exports = mongoose.model("DossierMedical", dossierMedicalShema);

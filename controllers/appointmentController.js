@@ -7,9 +7,9 @@ const Disponibilite = require("../models/Disponibilite");
 exports.getAppointments = async (req, res) => {
   try {
     const appointments = await Appointment.find()
-      .populate('patientId', 'email')
-      .populate('doctorId', 'email')
-      .populate('creneau');
+      .populate('patientId', 'name')
+      .populate('doctorId', 'name')
+      .populate('creneau', 'heur_bebut');
     res.json(appointments);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -101,6 +101,11 @@ exports.getMyAppointments = async (req, res) => {
 
 exports.createAppointment = async (req, res) => {
   try {
+    if(!req.body.patientId &&req.user.role==='patient'){
+      req.body.patientId=req.user._id;
+    }
+   
+
     const { patientId, doctorId, date, creneau, typeConsultation } = req.body;
     //check role du medecin
     const medecin = await User.findById(doctorId);
@@ -195,17 +200,34 @@ exports.updateAppointment = async (req, res) => {
     
     const updatedAppointment = await Appointment.findByIdAndUpdate(
       req.params.id,
-      { typeConsultation, date,creneau },
+      req.body,
       { new: true }
     ).populate('patientId', 'email').populate('doctorId', 'email');
-    
-     const creneauId = appointment.creneau;
+
+   if (creneau) {
+      if (  creneau.status!='libre') {
+      return res.status(400).json({ error: 'Le créneau est déjà réservé' });
+    }
+    const creneauId = appointment.creneau;
     
     await Creneau.findOneAndUpdate(
         { _id: req.body.creneau },
         { $set: { statut: "reserve" } },
         { new: true, runValidators: true }
       );
+
+    }
+    
+    // if (creneau) {
+    //    const creneauId = appointment.creneau;
+    
+    // await Creneau.findOneAndUpdate(
+    //     { _id: req.body.creneau },
+    //     { $set: { statut: "reserve" } },
+    //     { new: true, runValidators: true }
+    //   );
+    // }
+    
     res.json(updatedAppointment);
   } catch (error) {
     res.status(500).json({ error: error.message });

@@ -4,6 +4,7 @@ const User = require("../models/User");
 const Creneau = require("../models/Creneau");
 const Disponibilite = require("../models/Disponibilite");
 const DossierMedical = require("../models/DossierMedical");
+
 exports.formCreateConsultation = async (req, res) => {
   const doctors = await User.find({ role: "doctor" });
   const patients = await User.find({ role: "patient" });
@@ -50,15 +51,15 @@ exports.getMyConsultations = async (req, res) => {
     
     if (req.user.role === 'doctor') {
       consultations = await Consultation.find({ medecin: req.user._id })
-        .populate('appointment')
+        .populate('appointment','status')
         .sort({ dateConsultation: -1 });
     } else if (req.user.role === 'patient') {
       const appointments = await Appointment.find({ patientId: req.user._id });
-      const appointmentIds = appointments.map(app => app._id);
+      const appointmentIds = appointments.map(app => app._id);//fih  array dyal les ids dyal appointments dyal had user
       
       consultations = await Consultation.find({ appointment: { $in: appointmentIds } })
         .populate('appointment')
-        .populate('medecin', 'email')
+        .populate('medecin', 'name')
         .sort({ dateConsultation: -1 });
     }
     
@@ -88,7 +89,6 @@ exports.createConsultation = async (req, res) => {
     let dossier = await DossierMedical.findOne({ patientId: patient });
 
 
-    // Validate required fields
     if (!appointment) {
       return res.status(400).json({ error: "L'ID du rendez-vous est requis" });
     }
@@ -118,7 +118,6 @@ exports.createConsultation = async (req, res) => {
         }],
       });
     } else {
-      // If dossier exists, push the new consultation to historiqueConsultations
       dossier.historiqueConsultations.push({
         consultation: newConsultation._id,
         date: dateConsultation,
@@ -136,7 +135,7 @@ exports.createConsultation = async (req, res) => {
 // Update consultation
 exports.updateConsultation = async (req, res) => {
   try {
-    const { notes, diagnostic, traitement,constantes } = req.body;
+    const { notes, diagnostic, traitement } = req.body;
     
     const consultation = await Consultation.findById(req.params.id);
     if (!consultation) {
@@ -145,12 +144,12 @@ exports.updateConsultation = async (req, res) => {
     
     // Only doctor who created consultation can update
     if (consultation.medecin.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
-      return res.status(403).json({ error: 'Access denied' });
+      return res.status(403).json({ error: 'Access denied not your consulations' });
     }
     
     const updatedConsultation = await Consultation.findByIdAndUpdate(
       req.params.id,
-      { notes, diagnostic, traitement ,constantes},
+      { notes, diagnostic, traitement },
       { new: true }
     ).populate('appointment').populate('medecin', 'email');
     
@@ -170,7 +169,7 @@ exports.deleteConsultation = async (req, res) => {
     
     // Only doctor who created consultation or admin can delete
     if (consultation.medecin.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
-      return res.status(403).json({ error: 'Access denied' });
+      return res.status(403).json({ error: 'Access denied not your consultation' });
     }
     
     // Remove from dossier medical

@@ -82,8 +82,11 @@ const {
  * @swagger
  * /disponibilites:
  *   get:
- *     summary: Récupère toutes les disponibilités
- *     description: Retourne la liste des disponibilités des médecins
+ *     summary: Récupère les disponibilités des médecins
+ *     security:
+ *       - bearerAuth: []
+ *     
+ *     description: Retourne la liste des disponibilités des médecins (accessible uniquement par l'admin)
  *     tags: [Disponibilites]
  *     responses:
  *       200:
@@ -95,7 +98,7 @@ const {
  *               items:
  *                 $ref: '#/components/schemas/Disponibilite'
  */
-router.get('/', getDisponibilites);
+router.get('/', authenticate,adminOnly,getDisponibilites);
 
 /**
  * @swagger

@@ -10,5 +10,5 @@
         filesize:Number,
         labResultId:{type:Schema.Types.ObjectId,ref:"LabResult"},
         uploadedAt:{type:Date,default:Date.now},
-    })
+    },{timestamps:true})
     module.exports=mongoose.model('Document',schemaDocument);

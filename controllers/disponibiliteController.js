@@ -16,31 +16,29 @@ exports.getDisponibilites=async(req,res)=>{
 }
 exports.createDisponibilite = async (req, res) => {
     try {
-        if (!req.body.dateHeureDebut || !req.body.dateHeureFin || !req.body.medecin) {
-    return res.status(400).json({ message: "Tous les champs requis doivent être fournis." });
-}
-if (!moment(req.body.dateHeureDebut, "YYYY-MM-DD HH:mm", true).isValid()) {
-    return res.status(400).json({ message: "Le format de dateHeureDebut est invalide." });
-}
-if (!moment(req.body.dateHeureFin, "YYYY-MM-DD HH:mm", true).isValid()) {
-    return res.status(400).json({ message: "Le format de dateHeureFin est invalide." });
-}
-if (moment(req.body.dateHeureDebut).isAfter(req.body.dateHeureFin)) {
-    return res.status(400).json({ message: "La date de début doit être avant la date de fin." });
-}
-        //verifier le medecin existe 
 
-        const medecin = await User.findById({_id:req.body.medecin, role:'doctor'}).select('-password');
-if (!medecin) {
-    return res.status(404).json({ message: "Médecin introuvable." });
-}
+
+     const medecin = await User.findOne({_id: req.body.medecin, role: 'doctor'}).select('-password');
+        if (!medecin) {
+            return res.status(404).json({ message: "Médecin introuvable ou pas un docteur." });
+        }
         // Créer d'abord la disponibilité
-        const disponibilite = await Disponibilite.create(req.body);
-        
-        
-        // Utiliser moment pour parser les dates ISO complètes
-        let heureDebutMoment = moment(req.body.dateHeureDebut,"YYYY-MM-DD HH:mm");
+           let heureDebutMoment = moment(req.body.dateHeureDebut,"YYYY-MM-DD HH:mm");
         let heureFinMoment = moment(req.body.dateHeureFin,"YYYY-MM-DD HH:mm");
+        // const disponibilite = await Disponibilite.create({
+        //     dateHeureDebut: heureDebutMoment.toDate(),
+        //     dateHeureFin: heureFinMoment.toDate(),
+        //     medecin: req.body.medecin,
+        //     jour: req.body.jour,
+        //     date: req.body.date
+        // });
+        console.log(req.body);
+        console.log(heureDebutMoment.toDate());
+        console.log(heureFinMoment.toDate());
+
+        
+        
+     
         // heureDebutMoment.format("YYYY-MM-DD HH:mm");
         // heureFinMoment.format("YYYY-MM-DD HH:mm");
         
@@ -95,24 +93,7 @@ if (!medecin) {
 }
 exports.updateDisponibilite = async (req, res) => {
     try {
-        // Validation des données
-        if (!req.body.dateHeureDebut || !req.body.dateHeureFin) {
-            return res.status(400).json({ message: "Les dates de début et de fin sont requises." });
-        }
-        
-        if (!moment(req.body.dateHeureDebut, "YYYY-MM-DD HH:mm", true).isValid()) {
-            return res.status(400).json({ message: "Le format de dateHeureDebut est invalide." });
-        }
-        
-        if (!moment(req.body.dateHeureFin, "YYYY-MM-DD HH:mm", true).isValid()) {
-            return res.status(400).json({ message: "Le format de dateHeureFin est invalide." });
-        }
-        
-        if (moment(req.body.dateHeureDebut).isAfter(req.body.dateHeureFin)) {
-            return res.status(400).json({ message: "La date de début doit être avant la date de fin." });
-        }
-
-        // Trouver la disponibilité existante
+       
         const disponibilite = await Disponibilite.findById(req.params.id);
         if (!disponibilite) {
             return res.status(404).json({ message: "Disponibilité introuvable." });

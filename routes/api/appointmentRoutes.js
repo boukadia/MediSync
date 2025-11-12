@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { authenticate } = require('../../middlewares/auth');
 const { adminOnly, requireRoles,checkPatient } = require('../../middlewares/permissions');
+const { validateCreateAppointment, validateUpdateAppointment } = require('../../validators/appointmentValidator');
 const {
   getAppointments,
   getAppointmentById,
@@ -158,7 +159,7 @@ router.get('/my', authenticate, requireRoles('patient', 'doctor'), getMyAppointm
  *       403:
  *         description: Accès non autorisé
  */
-router.post('/', authenticate, requireRoles('patient'),createAppointment);
+router.post('/', authenticate, requireRoles('patient','secretaire'), validateCreateAppointment, createAppointment);
 
 /**
  * @swagger
@@ -206,10 +207,10 @@ router.post('/', authenticate, requireRoles('patient'),createAppointment);
  *       404:
  *         description: Rendez-vous non trouvé
  */
-router.put('/:id', authenticate,checkPatient, updateAppointment);
+router.put('/:id', authenticate, validateUpdateAppointment,requireRoles('patient','secretaire','admin'), checkPatient, updateAppointment);
 
 // Cancel appointment (patient or doctor)
-// router.patch('/:id/cancel', authenticate, cancelAppointment);
+router.put('/:id/cancel', authenticate, checkPatient, cancelAppointment);
 
 /**
  * @swagger
