@@ -5,15 +5,26 @@ const tokenBlacklist = new Set();
 
 exports.tokenBlacklist = tokenBlacklist;
 
-const generateToken = (userId) => {
-  return jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: '6000s' }); 
+const generateToken = (user) => {
+  
+  return jwt.sign({  userId: user.userId,
+        email: user.email,
+        role: user.role, }, process.env.JWT_SECRET, { expiresIn: '6000s' }); 
 };
 
 exports.register = async (req, res) => {
   try {
     const { email, password,name ,role} = req.body;
-    const user=await User.create({ email, password ,name,role});
+    console.log(req.body);
+    
+    // const user=await User.create({ email, password ,name,role});
+    const user=await User.create(req.body);
     const token = generateToken(user._id); 
+    if (user.role!=="patient") {
+      user.status="inactive";
+      await user.save();
+      
+    }
     // If the user is a patient, create an empty Dossier Medical
     if(user.role==="patient"){
       const DossierMedical = require("../models/DossierMedical");
@@ -34,7 +45,7 @@ exports.login = async (req, res) => {
     if (!user || !(await user.comparePassword(password))) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
-    const token = generateToken(user._id);
+    const token = generateToken(user);
     res.json({ token, user: { id: user._id, email: user.email, role: user.role } });
   } catch (error) {
     res.status(400).json({ error: error.message });

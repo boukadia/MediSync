@@ -3,7 +3,15 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 
 const app = express();
+// ===================
+const cors = require("cors");
+app.use(cors({
+  origin: "http://localhost:5173", // الفرونت
+  methods: "GET,POST,PUT,DELETE",
+  credentials: true
+}));
 
+// ======================
 app.use(express.json());
 app.get("/", (req, res) => {
     res.json({ message: "CareFlow APffI is running!" });

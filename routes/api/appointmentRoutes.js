@@ -85,7 +85,7 @@ const {
  *       403:
  *         description: Accès non autorisé
  */
-router.get('/', authenticate, adminOnly, getAppointments);
+router.get('/', authenticate, getAppointments);//ghyrt adminOnly
 
 /**
  * @swagger

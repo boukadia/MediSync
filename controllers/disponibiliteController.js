@@ -7,7 +7,7 @@ const moment = require('moment'); // Assurez-vous d'installer moment: npm instal
 
 exports.getDisponibilites=async(req,res)=>{
    try {
-    const disponibilites=await Disponibilite.find()
+    const disponibilites=await Disponibilite.find().populate('medecin', 'name')
     res.status(200).json(disponibilites)
     
    } catch (error) {
