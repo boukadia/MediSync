@@ -174,4 +174,14 @@ router.get('/logout', logOut);
 router.put('/status/:id',authenticate,adminOnly,toggleUserStatus);
 router.put('/profile',authenticate,updateProfile)
 router.delete('/profile/delete/:id',authenticate,adminOnly,deleteUser);
+
+router.get("/validate", authenticate, (req, res) => {
+  try {
+    // Si le middleware `authenticate` passe, le token est valide
+    res.json({ valid: true, role: req.user.role });
+  } catch (error) {
+    console.error("Erreur dans /validate :", error);
+    res.status(500).json({ valid: false, message: "Internal server error." });
+  }
+});
 module.exports = router;  

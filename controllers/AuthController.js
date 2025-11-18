@@ -6,10 +6,16 @@ const tokenBlacklist = new Set();
 exports.tokenBlacklist = tokenBlacklist;
 
 const generateToken = (user) => {
-  
-  return jwt.sign({  userId: user.userId,
-        email: user.email,
-        role: user.role, }, process.env.JWT_SECRET, { expiresIn: '6000s' }); 
+  return jwt.sign({
+    userId: user._id,
+    email: user.email,
+    role: user.role,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    phone: user.phone,
+    status: user.status,
+    name: user.name
+  }, process.env.JWT_SECRET, { expiresIn: '6000s' });
 };
 
 exports.register = async (req, res) => {
@@ -42,8 +48,11 @@ exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
-    if (!user || !(await user.comparePassword(password))) {
-      return res.status(401).json({ error: 'Invalid credentials' });
+    if (!user ) {
+       return res.status(404).json({ message: "Email non trouvé" });
+    }
+    if(!await user.comparePassword(password)){
+      return res.status(401).json({ message: "Mot de passe incorrect" });
     }
     const token = generateToken(user);
     res.json({ token, user: { id: user._id, email: user.email, role: user.role } });

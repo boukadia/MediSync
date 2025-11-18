@@ -47,7 +47,7 @@ exports.createPrescription = async (req, res) => {
       ConsultationId: consultationId,
       medications,
       notes,
-      pharmacyId:pharmacyId
+      // pharmacyId:pharmacyId
     });
 
     res.status(201).json({ message: 'Prescription created successfully', appointment });

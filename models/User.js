@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema({
   PharmacyName:{type:String},
   laboratoireName:{type:String},
   dateNaissance:{type:Date},
-  Sexe:{type:String},
+  sexe:{type:String},
   ContactUrgence:{type:String},
   password: { type: String, required: true },
   status: { type: String, enum: ['active', 'inactive'], default: 'active' },

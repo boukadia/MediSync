@@ -25,13 +25,13 @@ exports.createDisponibilite = async (req, res) => {
         // Créer d'abord la disponibilité
            let heureDebutMoment = moment(req.body.dateHeureDebut,"YYYY-MM-DD HH:mm");
         let heureFinMoment = moment(req.body.dateHeureFin,"YYYY-MM-DD HH:mm");
-        // const disponibilite = await Disponibilite.create({
-        //     dateHeureDebut: heureDebutMoment.toDate(),
-        //     dateHeureFin: heureFinMoment.toDate(),
-        //     medecin: req.body.medecin,
-        //     jour: req.body.jour,
-        //     date: req.body.date
-        // });
+        const disponibilite = await Disponibilite.create({
+            dateHeureDebut: heureDebutMoment.toDate(),
+            dateHeureFin: heureFinMoment.toDate(),
+            medecin: req.body.medecin,
+            jour: req.body.jour,
+            date: req.body.date
+        });
         console.log(req.body);
         console.log(heureDebutMoment.toDate());
         console.log(heureFinMoment.toDate());

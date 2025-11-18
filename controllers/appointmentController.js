@@ -83,17 +83,19 @@ exports.getMyAppointments = async (req, res) => {
     let query = {};
     
     if (req.user.role === 'patient') {
-      query.patientId = req.user._id;
+      query.patientId = req.user.userId;
     } else if (req.user.role === 'doctor') {
       query.doctorId = req.user._id;
     }
+    // console.log(req.user._id);
+    
     
     const appointments = await Appointment.find(query)
       .populate('patientId', 'email')
-      .populate('doctorId', 'email')
+      .populate('doctorId', 'name role address')
       .populate('creneau');
     
-    res.json(appointments);
+    res.json({data:appointments});
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

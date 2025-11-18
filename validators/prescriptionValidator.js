@@ -12,21 +12,21 @@ const checkValidationErrors = (req, res, next) => {
 // Validation pour créer une prescription
 exports.validateCreatePrescription = [
     // Validation du patient
-    body('patientId')
-        .notEmpty()
-        .withMessage('ID du patient obligatoire')
-        .isMongoId()
-        .withMessage('ID du patient invalide'),
+    // body('patientId')
+    //     .notEmpty()
+    //     .withMessage('ID du patient obligatoire')
+    //     .isMongoId()
+    //     .withMessage('ID du patient invalide'),
 
     // Validation du médecin
-    body('doctorId')
-        .notEmpty()
-        .withMessage('ID du médecin obligatoire')
-        .isMongoId()
-        .withMessage('ID du médecin invalide'),
+    // body('doctorId')
+    //     .notEmpty()
+    //     .withMessage('ID du médecin obligatoire')
+    //     .isMongoId()
+    //     .withMessage('ID du médecin invalide'),
 
     // Validation de la consultation
-    body('ConsultationId')
+    body('consultationId')
         .notEmpty()
         .withMessage('ID de consultation obligatoire')
         .isMongoId()
