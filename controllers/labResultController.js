@@ -16,12 +16,12 @@ exports.getMyLabResults = async (req, res) => {
     let query = {};
     
     if (req.user.role === 'doctor') {
-      query.doctorId = req.user._id;
+      query.doctorId = req.user.userId;
     } else if (req.user.role === 'laboratoire') {
-      query.laboratoireId = req.user._id;
+      query.laboratoireId = req.user.userId;
     }
     else if (req.user.role === 'patient') {
-      query.patientId = req.user._id;
+      query.patientId = req.user.userId;
     }
     
     const labResults = await LabResult.find(query);

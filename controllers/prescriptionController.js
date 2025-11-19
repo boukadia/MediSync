@@ -7,12 +7,16 @@ exports.getMyPrescriptions = async (req, res) => {
   try {
    if(req.user.role==='doctor'){
     
-    const prescriptions=await Prescription.find({doctorId:req.user._id});
+    const prescriptions=await Prescription.find({doctorId:req.user.userId}).populate('patientId', 'email')
+      .populate('doctorId', 'name')
+      // .populate('updatedAt')
+      
     return res.status(200).json(prescriptions);
    }
    if(req.user.role==='patient'){
 
-    const prescriptions=await Prescription.find({patientId:req.user._id});
+    const prescriptions=await Prescription.find({patientId:req.user.userId}).populate('patientId', 'email')
+      .populate('doctorId', 'name');
     return res.status(200).json(prescriptions);
    }
    
@@ -32,6 +36,7 @@ exports.createPrescription = async (req, res) => {
 // const appointment=await Appointment.find
 
     const { consultationId, medications, notes ,pharmacyId} = req.body;
+console.log(req.body);
 
     if (!consultationId) {
       return res.status(400).json({ message: 'Consultation ID is required' });
@@ -42,12 +47,12 @@ exports.createPrescription = async (req, res) => {
     }
 
     const prescription = await Prescription.create({
-      doctorId:docteur._id,
+      doctorId:docteur.userId,
       patientId:appointment.patientId,
-      ConsultationId: consultationId,
+      consultationId: consultationId,
       medications,
       notes,
-      // pharmacyId:pharmacyId
+      pharmacyId:pharmacyId
     });
 
     res.status(201).json({ message: 'Prescription created successfully', appointment });

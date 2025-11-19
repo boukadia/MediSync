@@ -25,12 +25,12 @@ exports.getMyLabOrderTests = async (req, res) => {
     let query = {};
     
     if (req.user.role === 'doctor') {
-      query.doctorId = req.user._id;
+      query.doctorId = req.user.userId;
     } else if (req.user.role === 'laboratoire') {
-      query.laboratoireId = req.user._id;
+      query.laboratoireId = req.user.userId;
     }
     else if (req.user.role === 'patient') {
-      query.patientId = req.user._id;
+      query.patientId = req.user.userId;
     }
     
     const labOrderTests = await LabOrderTest.find(query);
@@ -44,7 +44,7 @@ exports.getMyLabOrderTests = async (req, res) => {
 
 exports.createLabOrderTest = async (req, res) => {
   try {
-    const userId = req.user._id;
+    const userId = req.user.userId;
     const labOrderTest = await LabOrderTest.create({...req.body,laboratoireId:userId});
     res.status(201).json(labOrderTest);
   } catch (error) {

@@ -29,11 +29,11 @@ exports.validateCreateAppointment = [
         .isMongoId()
         .withMessage('ID créneau invalide'),
 
-    body('date')
-        .notEmpty()
-        .withMessage('Date obligatoire')
-        .isISO8601()
-        .withMessage('Format de date invalide'),
+    // body('date')
+    //     .notEmpty()
+    //     .withMessage('Date obligatoire')
+    //     .isISO8601()
+    //     .withMessage('Format de date invalide'),
 
     body('typeConsultation')
         .notEmpty()

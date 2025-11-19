@@ -50,11 +50,11 @@ exports.getMyConsultations = async (req, res) => {
     let consultations;
     
     if (req.user.role === 'doctor') {
-      consultations = await Consultation.find({ medecin: req.user._id })
+      consultations = await Consultation.find({ medecin: req.user.userId })
         .populate('appointment','status')
         .sort({ dateConsultation: -1 });
     } else if (req.user.role === 'patient') {
-      const appointments = await Appointment.find({ patientId: req.user._id });
+      const appointments = await Appointment.find({ patientId: req.user.userId });
       const appointmentIds = appointments.map(app => app._id);//fih  array dyal les ids dyal appointments dyal had user
       
       consultations = await Consultation.find({ appointment: { $in: appointmentIds } })
@@ -143,7 +143,7 @@ exports.updateConsultation = async (req, res) => {
     }
     
     // Only doctor who created consultation can update
-    if (consultation.medecin.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+    if (consultation.medecin.toString() !== req.user.userId.toString() && req.user.role !== 'admin') {
       return res.status(403).json({ error: 'Access denied not your consulations' });
     }
     
@@ -168,7 +168,7 @@ exports.deleteConsultation = async (req, res) => {
     }
     
     // Only doctor who created consultation or admin can delete
-    if (consultation.medecin.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+    if (consultation.medecin.toString() !== req.user.userId.toString() && req.user.role !== 'admin') {
       return res.status(403).json({ error: 'Access denied not your consultation' });
     }
     

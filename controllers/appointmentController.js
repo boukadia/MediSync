@@ -47,8 +47,8 @@ exports.getAppointments = async (req, res) => {
 //     }
     
 //     // Vérifier les permissions
-//     if (appointment.patientId.toString() !== req.user._id.toString() && 
-//         appointment.doctorId.toString() !== req.user._id.toString() &&
+//     if (appointment.patientId.toString() !== req.user.userId.toString() && 
+//         appointment.doctorId.toString() !== req.user.userId.toString() &&
 //         req.user.role !== 'admin') {
 //       return res.status(403).json({ error: 'Accès refusé' });
 //     }
@@ -85,12 +85,12 @@ exports.getMyAppointments = async (req, res) => {
     if (req.user.role === 'patient') {
       query.patientId = req.user.userId;
     } else if (req.user.role === 'doctor') {
-      query.doctorId = req.user._id;
+      query.doctorId = req.user.userId;
     }
-    // console.log(req.user._id);
+    // console.log(req.user.userId);
     
     
-    const appointments = await Appointment.find(query)
+    const appointments = await Appointment.find(query).sort("date")
       .populate('patientId', 'email')
       .populate('doctorId', 'name role address')
       .populate('creneau');
@@ -104,11 +104,11 @@ exports.getMyAppointments = async (req, res) => {
 exports.createAppointment = async (req, res) => {
   try {
     if(!req.body.patientId &&req.user.role==='patient'){
-      req.body.patientId=req.user._id;
+      req.body.patientId=req.user.userId;
     }
    
 
-    const { patientId, doctorId, date, creneau, typeConsultation } = req.body;
+    const { patientId, doctorId, creneau, typeConsultation } = req.body;
     //check role du medecin
     const medecin = await User.findById(doctorId);
     // const user=req.user; 
@@ -124,6 +124,7 @@ exports.createAppointment = async (req, res) => {
     const disponibilite = await Disponibilite.findOne({
       _id: creneaux.disponibilite,
     });
+    const date=disponibilite.dateHeureDebut
     // const medecin=await User.findOne({_id:doctorId})
 
     if (disponibilite.medecin != doctorId) {
@@ -154,7 +155,7 @@ exports.createAppointment = async (req, res) => {
         patientId,
         doctorId,
         creneau, //had l creneau rah howa CreneauId
-        date,
+        date:date,
         typeConsultation, 
       });
       await Creneau.findOneAndUpdate(
@@ -194,8 +195,8 @@ exports.updateAppointment = async (req, res) => {
     }
     
     // // Only allow updates by patient or doctor involved
-    // if (appointment.patientId.toString() !== req.user._id.toString() && 
-    //     appointment.doctorId.toString() !== req.user._id.toString() &&
+    // if (appointment.patientId.toString() !== req.user.userId.toString() && 
+    //     appointment.doctorId.toString() !== req.user.userId.toString() &&
     //     req.user.role !== 'admin') {
     //   return res.status(403).json({ error: 'Access denied' });
     // }
@@ -245,8 +246,8 @@ exports.cancelAppointment = async (req, res) => {
     }
     
     // Only allow cancellation by patient or doctor involved
-    if (appointment.patientId.toString() !== req.user._id.toString() && 
-        appointment.doctorId.toString() !== req.user._id.toString() &&
+    if (appointment.patientId.toString() !== req.user.userId.toString() && 
+        appointment.doctorId.toString() !== req.user.userId.toString() &&
         req.user.role !== 'admin') {
       return res.status(403).json({ error: 'Access denied' });
     }
