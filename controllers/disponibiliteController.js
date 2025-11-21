@@ -14,11 +14,23 @@ exports.getDisponibilites=async(req,res)=>{
     res.status(500).json({message:'Server Error',error:error.message})
    }
 }
+exports.getDisponibilitesByDoctor=async(req,res)=>{
+    try {
+        console.log('ID du médecin reçu :', req.params.id); // Log de l'ID du médecin
+     const disponibilite=await Disponibilite.find({medecin:req.params.id}).populate('medecin', 'name')
+        if(!disponibilite){
+            return res.status(404).json({message:"Disponibilité introuvable"})
+        }
+        res.status(200).json(disponibilite)
+    } catch (error) {
+        res.status(500).json({message:'Server Error',error:error.message})
+    }
+}
 exports.createDisponibilite = async (req, res) => {
     try {
 
 
-     const medecin = await User.findOne({_id: req.body.medecin, role: 'doctor'}).select('-password');
+     const medecin = await User.findOne({_id: req.user.userId, role: 'doctor'}).select('-password');
         if (!medecin) {
             return res.status(404).json({ message: "Médecin introuvable ou pas un docteur." });
         }
@@ -28,8 +40,8 @@ exports.createDisponibilite = async (req, res) => {
         const disponibilite = await Disponibilite.create({
             dateHeureDebut: heureDebutMoment.toDate(),
             dateHeureFin: heureFinMoment.toDate(),
-            medecin: req.body.medecin,
-            jour: req.body.jour,
+            medecin: req.user.userId,
+           
             date: req.body.date
         });
         console.log(req.body);
@@ -69,6 +81,7 @@ exports.createDisponibilite = async (req, res) => {
             const current = await Creneau.create({
                 heure_debut: heureDebut,
                 heure_fin: heureFin,
+                medecin: req.user.userId,
                 disponibilite: disponibilite._id,
                 statut: "libre"
             });

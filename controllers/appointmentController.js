@@ -9,7 +9,7 @@ exports.getAppointments = async (req, res) => {
     const appointments = await Appointment.find()
       .populate('patientId', 'name')
       .populate('doctorId', 'name')
-      .populate('creneau', 'heur_bebut');
+      .populate('creneau', 'heur_debut');
     res.json(appointments);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -108,7 +108,7 @@ exports.createAppointment = async (req, res) => {
     }
    
 
-    const { patientId, doctorId, creneau, typeConsultation } = req.body;
+    const { patientId, doctorId, creneau, date,consultationReason,typeConsultation } = req.body;
     //check role du medecin
     const medecin = await User.findById(doctorId);
     // const user=req.user; 
@@ -124,7 +124,7 @@ exports.createAppointment = async (req, res) => {
     const disponibilite = await Disponibilite.findOne({
       _id: creneaux.disponibilite,
     });
-    const date=disponibilite.dateHeureDebut
+    // const date=disponibilite.dateHeureDebut
     // const medecin=await User.findOne({_id:doctorId})
 
     if (disponibilite.medecin != doctorId) {
@@ -154,6 +154,7 @@ exports.createAppointment = async (req, res) => {
       const newAppointment = await Appointment.create({
         patientId,
         doctorId,
+        consultationReason,
         creneau, //had l creneau rah howa CreneauId
         date:date,
         typeConsultation, 
@@ -244,6 +245,9 @@ exports.cancelAppointment = async (req, res) => {
     if (!appointment) {
       return res.status(404).json({ error: 'Appointment not found' });
     }
+    if (appointment.status !== 'confirmed') {
+      return res.status(400).json({ error: 'Only confirmed appointments can be cancelled' });
+    }
     
     // Only allow cancellation by patient or doctor involved
     if (appointment.patientId.toString() !== req.user.userId.toString() && 
@@ -258,7 +262,10 @@ exports.cancelAppointment = async (req, res) => {
       { statut: 'libre' }
     );
     
-    await Appointment.findByIdAndDelete(req.params.id);
+    // await Appointment.findByIdAndDelete(req.params.id);
+    appointment.status='cancelled';
+    await appointment.save();
+
     
     res.json({ message: 'Appointment cancelled successfully' });
   } catch (error) {

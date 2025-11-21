@@ -24,7 +24,7 @@ const {
  *     Laboratory:
  *       type: object
  *       required:
- *         - nom
+ *         - name
  *         - adresse
  *         - telephone
  *         - email
@@ -34,9 +34,9 @@ const {
  *         _id:
  *           type: string
  *           description: ID auto-généré du laboratoire
- *         nom:
+ *         name:
  *           type: string
- *           description: Nom du laboratoire
+ *           description: name du laboratoire
  *         adresse:
  *           type: string
  *           description: Adresse du laboratoire
@@ -49,7 +49,7 @@ const {
  *           description: Email du laboratoire
  *         responsable:
  *           type: string
- *           description: Nom du responsable
+ *           description: name du responsable
  *         openHours:
  *           type: string
  *           description: Heures d'ouverture
@@ -58,7 +58,7 @@ const {
  *           enum: [actif, inactif]
  *           description: Statut du laboratoire
  *       example:
- *         nom: "Laboratoire Central"
+ *         name: "Laboratoire Central"
  *         adresse: "123 Rue Principale, Casablanca"
  *         telephone: "0522123456"
  *         email: "contact@labcentral.ma"
@@ -130,14 +130,14 @@ router.get('/:id', authenticate, getLaboratoryById);
  *           schema:
  *             type: object
  *             required:
- *               - nom
+ *               - name
  *               - adresse
  *               - telephone
  *               - email
  *               - responsable
  *               - openHours
  *             properties:
- *               nom:
+ *               name:
  *                 type: string
  *               adresse:
  *                 type: string
@@ -181,7 +181,7 @@ router.post('/', authenticate, adminOnly, createLaboratory);
  *           schema:
  *             type: object
  *             properties:
- *               nom:
+ *               name:
  *                 type: string
  *               adresse:
  *                 type: string

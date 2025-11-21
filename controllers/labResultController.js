@@ -4,9 +4,9 @@ const LabOrder = require('../models/LabOrder');
 
 exports.getLabResults = async (req, res) => {
   try {
-    const labResults = await LabResult.find()
+    const labResults = await LabResult.find().populate('labOrderTestId','labOrderId')
      
-    res.json(labResults);
+    res.json({data:labResults});
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

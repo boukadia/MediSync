@@ -27,17 +27,17 @@ exports.validateCreateDisponibilite = [
             return true;
         }),
 
-    body('medecin')
-        .notEmpty()
-        .withMessage('ID du médecin obligatoire')
-        .isMongoId()
-        .withMessage('ID médecin invalide'),
+    // body('medecin')
+    //     .notEmpty()
+    //     .withMessage('ID du médecin obligatoire')
+    //     .isMongoId()
+    //     .withMessage('ID médecin invalide'),
 
-    body('jour')
-        .notEmpty()
-        .withMessage('Jour obligatoire')
-        .isIn(['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'])
-        .withMessage('Jour invalide (lundi à samedi seulement)'),
+    // body('jour')
+    //     .notEmpty()
+    //     .withMessage('Jour obligatoire')
+    //     .isIn(['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'])
+    //     .withMessage('Jour invalide (lundi à samedi seulement)'),
 
     checkValidationErrors
 ];
@@ -63,15 +63,15 @@ exports.validateUpdateDisponibilite = [
             return true;
         }),
 
-    body('medecin')
-        .optional()
-        .isMongoId()
-        .withMessage('ID médecin invalide'),
+    // body('medecin')
+    //     .optional()
+    //     .isMongoId()
+    //     .withMessage('ID médecin invalide'),
 
-    body('jour')
-        .optional()
-        .isIn(['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'])
-        .withMessage('Jour invalide (lundi à samedi seulement)'),
+    // body('jour')
+    //     .optional()
+    //     .isIn(['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'])
+    //     .withMessage('Jour invalide (lundi à samedi seulement)'),
 
     checkValidationErrors
 ];

@@ -14,11 +14,7 @@ const disponibiliteSchema=mongoose.Schema({
         ref:'User',
         required:true
     },
-    jour:{
-         type: String, 
-        enum:['lundi','mardi','mercredi','jeudi','vendredi','samedi'],
-        required:true
-    }
+   
    
 },{timestamps:true})
 module.exports=mongoose.model('Disponibilite',disponibiliteSchema); 

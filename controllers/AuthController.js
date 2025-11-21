@@ -20,7 +20,7 @@ const generateToken = (user) => {
 
 exports.register = async (req, res) => {
   try {
-    const { email, password,name ,role} = req.body;
+    const { email, password,name ,role,spetialite} = req.body;
     console.log(req.body);
     
     // const user=await User.create({ email, password ,name,role});

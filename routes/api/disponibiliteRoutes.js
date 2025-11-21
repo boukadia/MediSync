@@ -8,7 +8,7 @@ const {
 } = require('../../middlewares/permissions');
 const { 
   createDisponibilite, 
-  getDisponibilites ,updateDisponibilite,deleteDisponibilite
+  getDisponibilites ,updateDisponibilite,deleteDisponibilite,getDisponibilitesByDoctor
 } = require('../../controllers/disponibiliteController');
 
 /**
@@ -230,5 +230,6 @@ router.put('/:id', authenticate,checkDoctorDisponibilite ,updateDisponibilite
  *         description: Disponibilité non trouvée
  */
 router.delete('/:id', authenticate, checkDoctorDisponibilite,deleteDisponibilite);
+router.get('/:id', authenticate, getDisponibilitesByDoctor);
 
 module.exports = router;

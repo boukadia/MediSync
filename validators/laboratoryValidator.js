@@ -11,7 +11,7 @@ const checkValidationErrors = (req, res, next) => {
 
 // Validation pour créer un laboratoire
 exports.validateCreateLaboratory = [
-    body('nom')
+    body('name')
         .notEmpty()
         .withMessage('Le nom du laboratoire est obligatoire'),
 
@@ -53,7 +53,7 @@ exports.validateUpdateLaboratory = [
         .isMongoId()
         .withMessage('ID de laboratoire invalide'),
 
-    body('nom')
+    body('name')
         .optional()
         .notEmpty()
         .withMessage('Le nom ne peut pas être vide'),

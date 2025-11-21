@@ -35,11 +35,18 @@ exports.validateCreateAppointment = [
     //     .isISO8601()
     //     .withMessage('Format de date invalide'),
 
+
     body('typeConsultation')
         .notEmpty()
         .withMessage('Type de consultation obligatoire')
         .isIn(['online', 'offline'])
         .withMessage('Type de consultation invalide (online ou offline)'),
+    body('consultationReason')
+        .notEmpty()
+        .withMessage('Raison de la consultation obligatoire')
+        .isLength({ min: 5, max: 500 })
+        .withMessage('La raison de la consultation doit contenir entre 5 et 500 caractères')
+        .trim(),
 
     body('status')
         .optional()

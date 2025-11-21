@@ -2,7 +2,7 @@ const mongoose=require('mongoose');
 const Schema=mongoose.Schema;
 const schemaLabOrderTest=new mongoose.Schema({
     resultValue:{type:Number,default:null},
-    nom: String,//nom du test : Glycémie à jeun
+    name: String,//name du test : Glycémie à jeun
     code:String,//glycemie=>GLY,
     unite:String,//(ex: mg/dL, g/L, %)
     prix: Number,

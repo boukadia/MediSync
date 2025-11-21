@@ -12,17 +12,19 @@ const appointmentSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
+  consultationReason: { type: String, required: true },
   creneau: { type: Schema.Types.ObjectId, ref: "Creneau", required: true },
-  date: { type: Date, required: true },
+  date: { type: String },
   typeConsultation: {
     type: String,
     enum: ["online", "offline"],
     required: true,
   },
+  // specialite: { type: String },
   status: {
     type: String,
-    enum: [ "confirmed", "cancelled",'completed'],
-    default: "confirmed",
+    enum: [ "pending","confirmed", "cancelled",'completed'],
+    default: "pending",
   },
 },{timestamps:true});
 module.exports = mongoose.model("Appointment", appointmentSchema);

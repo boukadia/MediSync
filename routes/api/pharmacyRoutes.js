@@ -34,10 +34,10 @@ const {
  *           description: ID auto-généré de la pharmacie
  *         name:
  *           type: string
- *           description: Nom de la pharmacie
+ *           description: name de la pharmacie
  *         pharmacistName:
  *           type: string
- *           description: Nom du pharmacien
+ *           description: name du pharmacien
  *         address:
  *           type: string
  *           description: Adresse de la pharmacie
