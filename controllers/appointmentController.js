@@ -17,22 +17,22 @@ exports.getAppointments = async (req, res) => {
 };
 
 // Get appointment by ID
-// exports.getAppointmentById = async (req, res) => {
-//   try {
-//     const appointment = await Appointment.findById(req.params.id)
-//       .populate('patientId', 'email')
-//       .populate('doctorId', 'email')
-//       .populate('creneau');
+exports.getAppointmentById = async (req, res) => {
+  try {
+    const appointment = await Appointment.findById(req.params.id)
+      .populate('patientId', 'email')
+      .populate('doctorId', 'email')
+      .populate('creneau');
     
-//     if (!appointment) {
-//       return res.status(404).json({ error: 'Appointment not found' });
-//     }
+    if (!appointment) {
+      return res.status(404).json({ error: 'Appointment not found' });
+    }
     
-//     res.json(appointment);
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// };
+    res.json(appointment);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
 // Get appointment for editing - 
 // exports.getAppointmentForEdit = async (req, res) => {
